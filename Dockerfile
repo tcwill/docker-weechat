@@ -1,14 +1,23 @@
 FROM ubuntu
-MAINTAINER Manfred Touron m@42.am
+MAINTAINER Aaron Daniel aaron@ninjawarriors.io
 
-RUN echo "deb http://archive.ubuntu.com/ubuntu/ precise main universe" >> /etc/apt/sources.list
-RUN apt-get -q -y update
-RUN apt-get install -y openssh-server weechat tmux
-RUN mkdir /var/run/sshd
-RUN echo "root:root" | chpasswd
+# original Dockerfile borrowed from moul/weechat
+# updated to use latest weechat and a single command for installation
+# to avoid the 42 layers issue
+
+RUN \
+  apt-get -q -y update ;\
+  apt-get install -y python-software-properties ;\
+  add-apt-repository -y ppa:nesthib/weechat-stable ;\
+  apt-get -q -y update ;\
+  apt-get install -y openssh-server weechat tmux ;\
+  mkdir /var/run/sshd ;\
+  useradd -m docker -s /bin/bash
+
 EXPOSE 22
-RUN useradd -m docker
 
-ADD bashrc /root/.bashrc
+ADD bashrc /home/docker/.bashrc
+ADD startup.sh /usr/bin/startup.sh
 
-CMD ["/usr/sbin/sshd", "-D"]
+# The argument is the user as set up above
+CMD ["/usr/bin/startup.sh", "docker"]

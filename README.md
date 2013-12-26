@@ -4,13 +4,27 @@ Weechat on Docker
 
 ## Usage
 
+### Persistance
+
+Normally, the container will store all the weechat configuration and components within the container, so when the container is replaced, the configuration will go away.  To fix that, do this on the docker host:
+
+Run the following as whatever user you use to manage docker.  You can put the file anywhere you like, really.
+```bash
+mkdir ~/.weechat
+chown 1000 ~/.weechat
+```
+
+### Booting
+
 The image is designed to boot directly into ssh, and you can ssh into the docker image with your public key.  You'll need to boot it with the right options:
 
 ```bash
-WEECHAT_ID=$(docker run -d -p 22 -e PUB_KEYS="<content of public key>" amdtech/weechat)
+WEECHAT_ID=$(docker run -d -p 22 -e PUB_KEYS="<content of public key>" -v /root/.weechat:/home/docker/.weechat amdtech/weechat)
 ```
 
 > If you don't set the `PUB_KEYS` environment variable, the logs will show that and the image will not boot.
+
+> Replace `/root/.weechat` with whatever directory you actually created.
 
 To get the port weechat is running on, run the following:
 

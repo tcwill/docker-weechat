@@ -1,25 +1,32 @@
-FROM ubuntu
-MAINTAINER Aaron Daniel aaron@ninjawarriors.io
+FROM alpine
 
+
+# fork of amdtech/docker-weechat
 # original Dockerfile borrowed from moul/weechat
 # updated to use latest weechat and a single command for installation
 # to avoid the 42 layers issue
 
 RUN \
-  apt-get -q -y update ;\
-  apt-get install -y python-software-properties ;\
-  add-apt-repository -y ppa:nesthib/weechat-stable ;\
-  apt-get -q -y update ;\
-  apt-get install -y openssh-server weechat tmux ;\
-  mkdir /var/run/sshd ;\
-  useradd -m docker -s /bin/bash
+  apk update; \
+  apk upgrade; \
+  apk add openssh weechat tmux; \
+  mkdir -p /var/run/sshd; \
+  ssh-keygen -f /etc/ssh/ssh_host_rsa_key -N '' -t rsa; \
+  ssh-keygen -f /etc/ssh/ssh_host_dsa_key -N '' -t dsa; \
+  adduser --disabled-password irc; passwd -u irc;
 
 EXPOSE 22
 
-ADD bashrc /home/docker/.bashrc
-ADD startup.sh /usr/bin/startup.sh
+# add the ash profile to the user's homedir
+# this creates/re-attaches tmux session upon login
+ADD user_profile /home/irc/.profile
 
-RUN chmod 755 /usr/bin/startup.sh
+# add script to setup user's pubkeys that are passed in with -e PUB_KEYS
+ADD ssh.sh /usr/bin/ssh.sh
+RUN chmod 755 /usr/bin/ssh.sh;
 
-# The argument is the user as set up above
-CMD ["/usr/bin/startup.sh", "docker"]
+
+#CMD ["/usr/sbin/sshd","-D"]
+CMD ["/usr/bin/ssh.sh","irc"]
+
+

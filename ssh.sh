@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 #
 # Preconfigure the booted docker image with SSH keys
 #
@@ -14,5 +14,8 @@ mkdir -p /home/$USER/.ssh
 echo $PUB_KEYS > /home/$USER/.ssh/authorized_keys
 chown $USER /home/$USER/.ssh/authorized_keys
 
-echo "SSH Keys activated... booting!"
-/usr/sbin/sshd -D
+# now run ssh:
+
+/usr/sbin/sshd -D -o "AuthenticationMethods publickey" -o "PasswordAuthentication no" 
+#/usr/sbin/sshd -D -E /home/irc/sshd.log
+

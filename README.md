@@ -5,16 +5,16 @@ Weechat on Docker
 ## Usage
 
 The use case for this is to run containerized weechat on a remote linux system and allow direct SSH access via an alternate port (not 22) and a public key.  
+
 The 'irc' login user's authorized key will be passed into the container via an environment variable specified to the docker run command line.
 
 ### Credits
 
-This is a fork of amdtech/docker-weechat - though running on alpine instead of ubuntu to save a little space.  I really liked the use of a tmux session to capture
-user login directly into a persistent, running weechat instance. 
+This is a fork of amdtech/docker-weechat - though running on alpine instead of ubuntu to save a little space.  I really liked the use of a tmux session to capture user login directly into a persistent, running weechat instance. 
 
 ### Persistance
 
-Normally, the container will store all the weechat configuration and components within the container, so when the container is replaced, the configuration will go away.  To fix that, do this on the docker host:
+Normally, the container will store all the weechat configuration and components within the container, so when the container is replaced, the configuration will go away.  To fix that, we'll present the container with a weebchat config volume.
 
 Run the following as the user that will run docker.  If you've already run weechat as this user, the ~/.weechat directory will likely already exist with the config that you've used previously. You can put the files anywhere you like to be mounted as a volume in docker, but to be consistent with running weechat without docker:
 ```bash
@@ -59,8 +59,6 @@ ssh -i <private key> irc@$(docker inspect -f "{{ .NetworkSettings.IPAddress }}" 
 Once you've connected with the irc user you'll immediately find yourself in the weechat client within a tmux session.  
 
 To disconnect from the tmux session, which will leave your weechat client/connection open and running, just detatch from tmux ^b-d
-
-
 
 
 ## Building

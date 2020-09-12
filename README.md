@@ -20,6 +20,8 @@ Run the following as the user that will run docker.  If you've already run weech
 ```bash
 mkdir ~/.weechat
 ```
+You'll also need to make sure that the .weechat directory on the docker host is writable by the same UID as the 'irc' user in the container (uid 1000) OR set the the .weechat directory to chmod 777 or similar.
+
 
 ### Booting
 

@@ -11,7 +11,7 @@ if [ -z "$PUB_KEYS" ]; then
 fi
 
 mkdir -p /home/$USER/.ssh
-echo $PUB_KEYS > /home/$USER/.ssh/authorized_keys
+echo "$PUB_KEYS" > /home/$USER/.ssh/authorized_keys
 chown -R ${USER}. /home/$USER/.ssh
 
 # now run ssh:

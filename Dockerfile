@@ -20,6 +20,7 @@ EXPOSE 22
 # add the ash profile to the user's homedir
 # this creates/re-attaches tmux session upon login
 ADD user_profile /home/irc/.profile
+RUN chown irc. /home/irc/.profile
 
 # add script to setup user's pubkeys that are passed in with -e PUB_KEYS
 ADD ssh.sh /usr/bin/ssh.sh

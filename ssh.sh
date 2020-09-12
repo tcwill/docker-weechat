@@ -12,7 +12,7 @@ fi
 
 mkdir -p /home/$USER/.ssh
 echo $PUB_KEYS > /home/$USER/.ssh/authorized_keys
-chown $USER /home/$USER/.ssh/authorized_keys
+chown -R ${USER}. /home/$USER/.ssh
 
 # now run ssh:
 
